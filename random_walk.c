@@ -21,7 +21,7 @@ typedef struct {
 } Agent;
 
 Velocity get_rand_step() {
-  int choice = rand() / (RAND_MAX / 4);
+  int choice = rand() % 4;
 
   switch (choice) {
   case 0: // up
@@ -39,6 +39,15 @@ Velocity get_rand_step() {
 
   fprintf(stderr, "Error: invalid random %d choice\n", choice);
   exit(-1);
+}
+
+void create_agents(Agent *pagents, int num_agents) {
+  for (int i = 0; i < num_agents; i++) {
+    pagents[i].x = rand() % WIDTH;
+    pagents[i].y = rand() % HEIGHT;
+    pagents[i].color = SDL_MapRGB(SDL_AllocFormat(SDL_PIXELFORMAT_RGB888),
+                                  rand() % 256, rand() % 256, rand() % 256);
+  }
 }
 
 void move_agent(SDL_Surface *psurface, Agent *pagent) {
@@ -77,7 +86,8 @@ int main(int argc, char *argv[]) {
   SDL_Surface *psurface = SDL_GetWindowSurface(pwindow);
 
   Agent *pagents = calloc(num_agents, sizeof(Agent));
-  Agent agent0 = (Agent){WIDTH / 2, HEIGHT / 2, 0xFF0000};
+
+  create_agents(pagents, num_agents);
 
   int app_running = 1;
   while (app_running) {
@@ -88,9 +98,12 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    move_agent(psurface, &agent0);
+    for (int i = 0; i < num_agents; i++) {
+      move_agent(psurface, &pagents[i]);
+    }
 
     SDL_UpdateWindowSurface(pwindow);
     SDL_Delay(20);
   }
+  free(pagents);
 }
