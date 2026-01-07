@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11
+CFLAGS = -Wall -Wextra -g -O0 -std=c11
 LDFLAGS = -lSDL2
 TARGET = random_walk
 SRC = random_walk.c
